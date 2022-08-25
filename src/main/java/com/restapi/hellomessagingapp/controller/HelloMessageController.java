@@ -1,18 +1,57 @@
 package com.restapi.hellomessagingapp.controller;
-
-import com.restapi.hellomessagingapp.model.Hello;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.atomic.AtomicLong;
-
+import com.restapi.hellomessagingapp.model.User;
+import org.springframework.web.bind.annotation.*;
 @RestController
-public class HelloMessageController {
-    private  static final  String template = "Hello , %s!";
-    private final AtomicLong counter = new AtomicLong();
+@RequestMapping("/home")
+public class HelloMessageController
+{
 
-    @GetMapping("/hello")
-    public Hello getHello(){
-        return new Hello(counter.incrementAndGet(),String.format(template, " "));
+    /**
+     * UC1 Create a Rest Controller to demonstrate the various HTTP Methods and respond
+     * hello messages to the User. To begin with show Hello from BridgeLabz
+     */
+    @RequestMapping(value = {"","/", "/hello"})
+    public String sayHello()
+    {
+        return "Hello From BridgeLabz !";
+    }
+
+   /**
+    * UC2 Make REST Call to show Hello Mark from BridgeLabz
+    * curl http://localhost:8080/home/query?Fname=Teju&Lname=Patil
+    */
+    @RequestMapping(value = {"/query"}, method = RequestMethod.GET)
+    public String sayHello(@RequestParam(value = "Fname") String Fname,@RequestParam(value = "Lname") String Lname)
+    {
+        return "Hello "+ Fname +" "+ Lname+" from BridgeLabz";
+    }
+    /**
+     * UC3 Make REST Call to show Hello Mark from BridgeLabz
+     * curl http://localhost:8080/hello/param/Teju
+     */
+    @GetMapping("/param/{name}")
+    public String sayHelloParam(@PathVariable String name)
+    {
+        return  "Hello " + name + " from BridgeLabz";
+    }
+
+    /**
+     * UC4 Make REST Call to show Hello Mark Taylor from BridgeLabz
+     * curl -X POST -H "Content-Type: application/json" -d
+     * '{"firstName": ”Mark","lastName": ”Taylor"}'
+     *curl "http://localhost:8080/hello/post"
+     */
+    @PostMapping("/post")
+    public String sayHello(@RequestBody User user) {
+        return "Hello " + user.getFirstName() + " " + user.getLastName() + " from bridgeLabz";
+    }
+
+    /**
+     * UC5 Make REST Call to show Hello Mark Taylor from BridgeLabz
+     * localhost:8080/hello/put/Mark/?lastName=Taylor
+     */
+    @PutMapping("/put/{firstName}")
+    public String sayHelloPut(@PathVariable String firstName, @RequestParam(value = "lastName") String lastName) {
+        return "Hello " + firstName + " " + lastName + " from BridgeLabz";
     }
 }
